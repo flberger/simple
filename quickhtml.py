@@ -1,11 +1,11 @@
-"""quickhtml - Python classes to quickly create HTML documents
-    
+'''quickhtml - Python classes to quickly create HTML documents
+
    Originating from the Building Block 2 CMS
-    
+
    Outsourced on 14 Feb 2009
-    
+
    Copyright 2009, 2012 Florian Berger <fberger@florian-berger.de>
-"""
+'''
 
 # This file is part of quickhtml.
 #
@@ -32,13 +32,12 @@ VERSION = "0.1.0"
 
 # Dimensions of a Textarea
 #
-Rows = 20
-Cols = 60
+ROWS = 20
+COLS = 60
 
-def buildTableRow(DataList):
-    '''This method returns a HTML table
-       row containing the table data from
-       the list given.'''
+def build_table_row(DataList):
+    '''This method returns a HTML table row containing the table data from the list given.
+    '''
 
     HTML = '<tr>'
 
@@ -50,27 +49,27 @@ def buildTableRow(DataList):
     return(HTML)
 
 class Page:
-    '''This is a helper class to easily create
-       HTML documents.'''
+    '''This is a helper class to easily create HTML documents.
+    '''
 
-    def __init__(self,Title,CSS,Body):
-        '''Initialize the document with a Title,
-           a CSS section to be put in <style></style>
-           and the Body. Body must be a string containing
-           valid HTML.'''
+    def __init__(self, Title, CSS, Body):
+        '''Initialize the document with a Title, a CSS section to be put in <style></style> and the Body.
+           Body must be a string containing valid HTML.
+        '''
 
         self.Title = Title
-        self.CSS   = CSS
-        self.Body  = Body
+        self.CSS = CSS
+        self.Body = Body
 
-    def append(self,HTML):
-        '''Append HTML to the body of the
-           document.'''
+    def append(self, HTML):
+        '''Append HTML to the body of the document.
+        '''
 
         self.Body = self.Body + HTML
 
     def __str__(self):
-        '''Return the complete HTML document.'''
+        '''Return the complete HTML document.
+        '''
 
         return('<html><head><title>'
                + self.Title
@@ -81,46 +80,43 @@ class Page:
                + '</body></html>')
 
 class Form:
-    '''This is a helper class to quickly create
-       HTML forms.'''
+    '''This is a helper class to quickly create HTML forms.
+    '''
 
-    def __init__(self,Action,Method,Separator,SubmitLabel):
-        '''Initialize the form. Action must be
-           an URI to call and Method must be
-           GET or POST. Separator separates
-           the fieldset elements. SubmitLabel
-           is the value for the submit element.'''
+    def __init__(self, Action, Method, Separator, SubmitLabel):
+        '''Initialize the form.
+           Action must be an URI to call and Method must be GET or POST.
+           Separator separates the fieldset elements.
+           SubmitLabel is the value for the submit element.
+        '''
 
         # TODO: Do we need to specify Action
         # at all, or does POST suffice?
         #
-        self.Action          = Action
-        self.Method          = Method
-        self.Separator       = Separator
-        self.SubmitLabel     = SubmitLabel
-        self.Fieldsets       = {}
+        self.Action = Action
+        self.Method = Method
+        self.Separator = Separator
+        self.SubmitLabel = SubmitLabel
+        self.Fieldsets = {}
         self.CurrentFieldset = ''
-        self.Hidden          = ''
-        self.NoFieldset      = ''
+        self.Hidden = ''
+        self.NoFieldset = ''
 
-    def addFieldset(self,Legend):
-        '''Add a new fieldset and make
-           it the current.'''
+    def add_fieldset(self, Legend):
+        '''Add a new fieldset and make it the current.'''
 
         self.Fieldsets[Legend] = ''
-        self.CurrentFieldset   = Legend
+        self.CurrentFieldset = Legend
 
-    def addInput(self,Label,Type,Name,Value='',Checked=''):
-        '''Add a new input element. If there is
-           a current fieldset, add it there.
-           The optional arguments Value, Checked
-           are there for creating checkboxes.
-           They are used by the proxy method
-           addCheckbox(). Normal call is
+    def add_input(self, Label, Type, Name, Value = '', Checked = ''):
+        '''Add a new input element.
+           If there is a current fieldset, add it there.
+           The optional arguments Value, Checked are there for creating
+           checkboxes.
+           They are used by the proxy method add_checkbox(). Normal call is
 
-           addInput(self,Label,Type,Name)
-           
-           '''
+           add_input(self, Label, Type, Name)
+        '''
 
         LabelHTML = '<label for="' \
                     + Name \
@@ -141,35 +137,36 @@ class Form:
 
         InputHTML = InputHTML + '" id="'  \
                               + Name  \
-                              + '">'                              
+                              + '">'
 
         if self.CurrentFieldset:
 
             self.Fieldsets[self.CurrentFieldset] = self.Fieldsets[self.CurrentFieldset] \
-                                                   + buildTableRow( [ LabelHTML , InputHTML ] )
+                                                   + build_table_row( [ LabelHTML , InputHTML ] )
 
         else:
             self.NoFieldset = self.NoFieldset + LabelHTML + InputHTML + self.Separator
 
-    def addCheckbox(self,Label,Name,Value,Checked):
-        '''Add a checkbox. This method acts as a
-           proxy to addInput()'''
+    def add_checkbox(self, Label, Name, Value, Checked):
+        '''Add a checkbox.
+           This method acts as a proxy to add_input()
+        '''
 
-        self.addInput(Label,'checkbox',Name,Value,Checked)
+        self.add_input(Label, 'checkbox', Name, Value, Checked)
 
-    def addTextarea(self,Name,Content):
-        '''Add a text area to the form or the 
-           current fieldset (if any).'''
+    def add_textarea(self, Name, Content):
+        '''Add a text area to the form or the current fieldset (if any).
+        '''
 
         HTML = '<textarea name="' \
                + Name  \
                + '" rows="' \
-               + str(Rows) \
+               + str(ROWS) \
                +'" cols="' \
-               + str(Cols) \
+               + str(COLS) \
                +'">' \
                + Content \
-               + '</textarea>'               
+               + '</textarea>'
 
         if self.CurrentFieldset:
 
@@ -179,10 +176,10 @@ class Form:
         else:
             self.NoFieldset = self.NoFieldset + HTML + self.Separator
 
-    def addDropDownList(self,Label,Name,List):
-        '''Add a drop down list to the form or the 
-           current fieldset (if any). List is a list 
-           of values to select from.'''
+    def add_drop_down_list(self, Label, Name, List):
+        '''Add a drop down list to the form or the current fieldset (if any).
+           List is a list of values to select from.
+        '''
 
         LabelHTML = '<label for="' \
                     + Name \
@@ -190,7 +187,7 @@ class Form:
                     + Label \
                     + '</label>'
 
-        ListHTML  = '<select name="' \
+        ListHTML = '<select name="' \
                     + Name  \
                     + '" size="1">'
 
@@ -202,13 +199,14 @@ class Form:
         if self.CurrentFieldset:
 
             self.Fieldsets[self.CurrentFieldset] = self.Fieldsets[self.CurrentFieldset] \
-                                                   + buildTableRow( [ LabelHTML , ListHTML ] )
+                                                   + build_table_row( [ LabelHTML , ListHTML ] )
 
         else:
             self.NoFieldset = self.NoFieldset + LabelHTML + ListHTML + self.Separator
 
-    def addHidden(self,Name,Value):
-        'Add a new hidden element to the form.'
+    def add_hidden(self, Name, Value):
+        '''Add a new hidden element to the form.
+        '''
 
         self.Hidden = self.Hidden + '<input type="hidden" name="' \
                    + Name  \
@@ -217,7 +215,8 @@ class Form:
                    + '">'
 
     def __str__(self):
-        'Return the HTML form as a string.'
+        '''Return the HTML form as a string.
+        '''
 
         HTML = '<form action="' \
                + self.Action \
