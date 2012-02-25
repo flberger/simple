@@ -1,0 +1,48 @@
+README for quickhtml
+==================
+
+About
+-----
+
+quickhtml is ADD HERE
+
+
+Prerequisites
+-------------
+
+Python    [http://www.python.org](http://www.python.org)
+
+
+Installation
+------------
+
+Unzip the file, then at the command line run
+
+    python setup.py install
+
+
+Documentation
+-------------
+
+To read the API documentation, open a shell / DOS window, navigate to the
+quickhtml directory, and run
+
+    pydoc quickhtml
+
+You can create a HTML version using
+
+    pydoc -w quickhtml
+
+
+License
+-------
+
+quickhtml is licensed under the GPL. See the file COPYING for details.
+
+
+Author
+------
+
+(c) Florian Berger <fberger@florian-berger.de>
+
+
