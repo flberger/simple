@@ -44,39 +44,66 @@ def build_table_row(DataList):
     for Data in DataList:
         HTML = HTML + '<td>' + Data + '</td>'
 
-    HTML = HTML + '</trd>'
+    HTML = HTML + '</tr>'
 
     return(HTML)
 
 class Page:
     '''This is a helper class to easily create HTML documents.
+
+       Attributes:
+
+       Page.title
+           The document title.
+
+       Page.css
+           The document inline stylesheets.
+
+       Page.body
+           The document body.
+
+       Page.link_dict
+           A dictionary containing relation identifiers pointing to URIs,
+           as {"stylesheet" : "/stylesheet.css"}.
     '''
 
-    def __init__(self, Title, CSS, Body):
-        '''Initialize the document with a Title, a CSS section to be put in <style></style> and the Body.
-           Body must be a string containing valid HTML.
+    def __init__(self, title, css = "", body = "", link_dict = None):
+        '''Initialize the document with a title, an optional CSS section to be put in <style></style> and optional body content.
+
+           body, if given, must be a string containing valid HTML.
+
+           link_dict is an optional dictionary to create <link> elements in the
+           HTML head. It must contain relation identifiers pointing to URIs,
+           as {"stylesheet" : "/stylesheet.css"}.
         '''
 
-        self.Title = Title
-        self.CSS = CSS
-        self.Body = Body
+        self.title = title
+        self.css = css
+        self.body = body
+
+        if link_dict is None:
+
+            self.link_dict = {}
+
+        else:
+            self.link_dict = link_dict
 
     def append(self, HTML):
         '''Append HTML to the body of the document.
         '''
 
-        self.Body = self.Body + HTML
+        self.body = self.body + HTML
 
     def __str__(self):
         '''Return the complete HTML document.
         '''
 
         return('<html><head><title>'
-               + self.Title
+               + self.title
                + '</title><style type="text/css">'
-               + self.CSS
+               + self.css
                + '</style></head><body>'
-               + self.Body
+               + self.body
                + '</body></html>')
 
 class Form:
