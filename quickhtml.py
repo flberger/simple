@@ -1,11 +1,11 @@
-'''quickhtml - Python classes to quickly create HTML documents
+"""quickhtml - Python classes to quickly create HTML documents
 
    Originating from the Building Block 2 CMS
 
    Outsourced on 14 Feb 2009
 
    Copyright 2009, 2012 Florian Berger <fberger@florian-berger.de>
-'''
+"""
 
 # This file is part of quickhtml.
 #
@@ -36,8 +36,8 @@ ROWS = 20
 COLS = 60
 
 def build_table_row(DataList):
-    '''This method returns a HTML table row containing the table data from the list given.
-    '''
+    """This method returns a HTML table row containing the table data from the list given.
+    """
 
     HTML = '<tr>'
 
@@ -49,7 +49,7 @@ def build_table_row(DataList):
     return(HTML)
 
 class Page:
-    '''This is a helper class to easily create HTML documents.
+    """This is a helper class to easily create HTML documents.
 
        Attributes:
 
@@ -65,17 +65,17 @@ class Page:
        Page.link_dict
            A dictionary containing relation identifiers pointing to URIs,
            as {"stylesheet" : "/stylesheet.css"}.
-    '''
+    """
 
     def __init__(self, title, css = "", body = "", link_dict = None):
-        '''Initialize the document with a title, an optional CSS section to be put in <style></style> and optional body content.
+        """Initialize the document with a title, an optional CSS section to be put in <style></style> and optional body content.
 
            body, if given, must be a string containing valid HTML.
 
            link_dict is an optional dictionary to create <link> elements in the
            HTML head. It must contain relation identifiers pointing to URIs,
            as {"stylesheet" : "/stylesheet.css"}.
-        '''
+        """
 
         self.title = title
         self.css = css
@@ -89,14 +89,14 @@ class Page:
             self.link_dict = link_dict
 
     def append(self, HTML):
-        '''Append HTML to the body of the document.
-        '''
+        """Append HTML to the body of the document.
+        """
 
         self.body = self.body + HTML
 
     def __str__(self):
-        '''Return the complete HTML document.
-        '''
+        """Return the complete HTML document.
+        """
 
         return('<html><head><title>'
                + self.title
@@ -107,15 +107,15 @@ class Page:
                + '</body></html>')
 
 class Form:
-    '''This is a helper class to quickly create HTML forms.
-    '''
+    """This is a helper class to quickly create HTML forms.
+    """
 
     def __init__(self, Action, Method, Separator, SubmitLabel):
-        '''Initialize the form.
+        """Initialize the form.
            Action must be an URI to call and Method must be GET or POST.
            Separator separates the fieldset elements.
            SubmitLabel is the value for the submit element.
-        '''
+        """
 
         # TODO: Do we need to specify Action
         # at all, or does POST suffice?
@@ -130,20 +130,21 @@ class Form:
         self.NoFieldset = ''
 
     def add_fieldset(self, Legend):
-        '''Add a new fieldset and make it the current.'''
+        """Add a new fieldset and make it the current.
+        """
 
         self.Fieldsets[Legend] = ''
         self.CurrentFieldset = Legend
 
     def add_input(self, Label, Type, Name, Value = '', Checked = ''):
-        '''Add a new input element.
+        """Add a new input element.
            If there is a current fieldset, add it there.
            The optional arguments Value, Checked are there for creating
            checkboxes.
            They are used by the proxy method add_checkbox(). Normal call is
 
            add_input(self, Label, Type, Name)
-        '''
+        """
 
         LabelHTML = '<label for="' \
                     + Name \
@@ -175,15 +176,15 @@ class Form:
             self.NoFieldset = self.NoFieldset + LabelHTML + InputHTML + self.Separator
 
     def add_checkbox(self, Label, Name, Value, Checked):
-        '''Add a checkbox.
+        """Add a checkbox.
            This method acts as a proxy to add_input()
-        '''
+        """
 
         self.add_input(Label, 'checkbox', Name, Value, Checked)
 
     def add_textarea(self, Name, Content):
-        '''Add a text area to the form or the current fieldset (if any).
-        '''
+        """Add a text area to the form or the current fieldset (if any).
+        """
 
         HTML = '<textarea name="' \
                + Name  \
@@ -204,9 +205,9 @@ class Form:
             self.NoFieldset = self.NoFieldset + HTML + self.Separator
 
     def add_drop_down_list(self, Label, Name, List):
-        '''Add a drop down list to the form or the current fieldset (if any).
+        """Add a drop down list to the form or the current fieldset (if any).
            List is a list of values to select from.
-        '''
+        """
 
         LabelHTML = '<label for="' \
                     + Name \
@@ -232,8 +233,8 @@ class Form:
             self.NoFieldset = self.NoFieldset + LabelHTML + ListHTML + self.Separator
 
     def add_hidden(self, Name, Value):
-        '''Add a new hidden element to the form.
-        '''
+        """Add a new hidden element to the form.
+        """
 
         self.Hidden = self.Hidden + '<input type="hidden" name="' \
                    + Name  \
@@ -242,8 +243,8 @@ class Form:
                    + '">'
 
     def __str__(self):
-        '''Return the HTML form as a string.
-        '''
+        """Return the HTML form as a string.
+        """
 
         # Use enctype="multipart/form-data" to be able to upload files with
         # <input type="file">
