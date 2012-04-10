@@ -218,11 +218,14 @@ class Form:
         '''Return the HTML form as a string.
         '''
 
+        # Use enctype="multipart/form-data" to be able to upload files with
+        # <input type="file">
+        #
         HTML = '<form action="' \
                + self.Action \
                + '" method="' \
                + self.Method \
-               + '">'
+               + '" enctype="multipart/form-data">'
 
         HTML = HTML + self.NoFieldset
 
