@@ -98,13 +98,11 @@ class Page:
         """Return the complete HTML document.
         """
 
-        return('<html><head><title>'
-               + self.title
-               + '</title><style type="text/css">'
-               + self.css
-               + '</style></head><body>'
-               + self.body
-               + '</body></html>')
+        link_str = ''.join(['<link rel="{0}" href="{1}">'.format(link, uri) for link, uri in self.link_dict.items()])
+
+        document_str = '<html><head><title>{0}</title>{1}<style type="text/css">{2}</style></head><body>{3}</body></html>'
+
+        return(document_str.format(self.title, link_str, self.css, self.body))
 
 class Form:
     """This is a helper class to quickly create HTML forms.
