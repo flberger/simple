@@ -88,11 +88,15 @@ class Page:
         else:
             self.link_dict = link_dict
 
+        return
+
     def append(self, HTML):
         """Append HTML to the body of the document.
         """
 
         self.body = self.body + HTML
+
+        return
 
     def __str__(self):
         """Return the complete HTML document.
@@ -127,12 +131,16 @@ class Form:
         self.Hidden = ''
         self.NoFieldset = ''
 
+        return
+
     def add_fieldset(self, Legend):
         """Add a new fieldset and make it the current.
         """
 
         self.Fieldsets[Legend] = ''
         self.CurrentFieldset = Legend
+
+        return
 
     def add_input(self, Label, Type, Name, Value = '', Checked = ''):
         """Add a new input element.
@@ -173,12 +181,16 @@ class Form:
         else:
             self.NoFieldset = self.NoFieldset + LabelHTML + InputHTML + self.Separator
 
+        return
+
     def add_checkbox(self, Label, Name, Value, Checked):
         """Add a checkbox.
            This method acts as a proxy to add_input()
         """
 
         self.add_input(Label, 'checkbox', Name, Value, Checked)
+
+        return
 
     def add_textarea(self, Name, Content):
         """Add a text area to the form or the current fieldset (if any).
@@ -201,6 +213,8 @@ class Form:
 
         else:
             self.NoFieldset = self.NoFieldset + HTML + self.Separator
+
+        return
 
     def add_drop_down_list(self, Label, Name, List):
         """Add a drop down list to the form or the current fieldset (if any).
@@ -230,6 +244,8 @@ class Form:
         else:
             self.NoFieldset = self.NoFieldset + LabelHTML + ListHTML + self.Separator
 
+        return
+
     def add_hidden(self, Name, Value):
         """Add a new hidden element to the form.
         """
@@ -239,6 +255,8 @@ class Form:
                    + '" value="'  \
                    + Value  \
                    + '">'
+
+        return
 
     def __str__(self):
         """Return the HTML form as a string.
