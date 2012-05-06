@@ -112,148 +112,148 @@ class Form:
     """This is a helper class to quickly create HTML forms.
     """
 
-    def __init__(self, Action, Method, Separator, SubmitLabel):
+    def __init__(self, action, method, separator, submit_label):
         """Initialize the form.
-           Action must be an URI to call and Method must be GET or POST.
-           Separator separates the fieldset elements.
-           SubmitLabel is the value for the submit element.
+           action must be an URI to call and method must be GET or POST.
+           separator separates the fieldset elements.
+           submit_label is the value for the submit element.
         """
 
-        # TODO: Do we need to specify Action
+        # TODO: Do we need to specify action
         # at all, or does POST suffice?
         #
-        self.Action = Action
-        self.Method = Method
-        self.Separator = Separator
-        self.SubmitLabel = SubmitLabel
-        self.Fieldsets = {}
-        self.CurrentFieldset = ''
-        self.Hidden = ''
-        self.NoFieldset = ''
+        self.action = action
+        self.method = method
+        self.separator = separator
+        self.submit_label = submit_label
+        self.fieldsets = {}
+        self.current_fieldset = ''
+        self.hidden = ''
+        self.no_fieldset = ''
 
         return
 
-    def add_fieldset(self, Legend):
+    def add_fieldset(self, legend):
         """Add a new fieldset and make it the current.
         """
 
-        self.Fieldsets[Legend] = ''
-        self.CurrentFieldset = Legend
+        self.fieldsets[legend] = ''
+        self.current_fieldset = legend
 
         return
 
-    def add_input(self, Label, Type, Name, Value = '', Checked = ''):
+    def add_input(self, label, type, name, value = '', checked = ''):
         """Add a new input element.
            If there is a current fieldset, add it there.
-           The optional arguments Value, Checked are there for creating
+           The optional arguments value, checked are there for creating
            checkboxes.
            They are used by the proxy method add_checkbox(). Normal call is
 
-           add_input(self, Label, Type, Name)
+           add_input(self, label, type, name)
         """
 
-        LabelHTML = '<label for="' \
-                    + Name \
+        label_html = '<label for="' \
+                    + name \
                     + '">' \
-                    + Label \
+                    + label \
                     + '</label>'
 
-        InputHTML = '<input type="' \
-                    + Type \
+        input_html = '<input type="' \
+                    + type \
                     + '" name="' \
-                    + Name
+                    + name
 
-        if Value:
-            InputHTML = InputHTML + '" value="' + Value
+        if value:
+            input_html = input_html + '" value="' + value
 
-        if Checked:
-            InputHTML = InputHTML + '" checked="checked'
+        if checked:
+            input_html = input_html + '" checked="checked'
 
-        InputHTML = InputHTML + '" id="'  \
-                              + Name  \
+        input_html = input_html + '" id="'  \
+                              + name  \
                               + '">'
 
-        if self.CurrentFieldset:
+        if self.current_fieldset:
 
-            self.Fieldsets[self.CurrentFieldset] = self.Fieldsets[self.CurrentFieldset] \
-                                                   + build_table_row( [ LabelHTML , InputHTML ] )
+            self.fieldsets[self.current_fieldset] = self.fieldsets[self.current_fieldset] \
+                                                   + build_table_row( [ label_html , input_html ] )
 
         else:
-            self.NoFieldset = self.NoFieldset + LabelHTML + InputHTML + self.Separator
+            self.no_fieldset = self.no_fieldset + label_html + input_html + self.separator
 
         return
 
-    def add_checkbox(self, Label, Name, Value, Checked):
+    def add_checkbox(self, label, name, value, checked):
         """Add a checkbox.
            This method acts as a proxy to add_input()
         """
 
-        self.add_input(Label, 'checkbox', Name, Value, Checked)
+        self.add_input(label, 'checkbox', name, value, checked)
 
         return
 
-    def add_textarea(self, Name, Content):
+    def add_textarea(self, name, content):
         """Add a text area to the form or the current fieldset (if any).
         """
 
         HTML = '<textarea name="' \
-               + Name  \
+               + name  \
                + '" rows="' \
                + str(ROWS) \
                +'" cols="' \
                + str(COLS) \
                +'">' \
-               + Content \
+               + content \
                + '</textarea>'
 
-        if self.CurrentFieldset:
+        if self.current_fieldset:
 
-            self.Fieldsets[self.CurrentFieldset] = self.Fieldsets[self.CurrentFieldset] \
+            self.fieldsets[self.current_fieldset] = self.fieldsets[self.current_fieldset] \
                                                    + '<tr><td colspan="2">' + HTML + '</td></tr>'
 
         else:
-            self.NoFieldset = self.NoFieldset + HTML + self.Separator
+            self.no_fieldset = self.no_fieldset + HTML + self.separator
 
         return
 
-    def add_drop_down_list(self, Label, Name, List):
+    def add_drop_down_list(self, label, name, list):
         """Add a drop down list to the form or the current fieldset (if any).
-           List is a list of values to select from.
+           list is a list of values to select from.
         """
 
-        LabelHTML = '<label for="' \
-                    + Name \
+        label_html = '<label for="' \
+                    + name \
                     + '">' \
-                    + Label \
+                    + label \
                     + '</label>'
 
-        ListHTML = '<select name="' \
-                    + Name  \
+        list_html = '<select name="' \
+                    + name  \
                     + '" size="1">'
 
-        for Value in List:
-            ListHTML = ListHTML + '<option>' + Value + '</option>'
+        for value in list:
+            list_html = list_html + '<option>' + value + '</option>'
 
-        ListHTML = ListHTML + '</select>'
+        list_html = list_html + '</select>'
 
-        if self.CurrentFieldset:
+        if self.current_fieldset:
 
-            self.Fieldsets[self.CurrentFieldset] = self.Fieldsets[self.CurrentFieldset] \
-                                                   + build_table_row( [ LabelHTML , ListHTML ] )
+            self.fieldsets[self.current_fieldset] = self.fieldsets[self.current_fieldset] \
+                                                   + build_table_row( [ label_html , list_html ] )
 
         else:
-            self.NoFieldset = self.NoFieldset + LabelHTML + ListHTML + self.Separator
+            self.no_fieldset = self.no_fieldset + label_html + list_html + self.separator
 
         return
 
-    def add_hidden(self, Name, Value):
+    def add_hidden(self, name, value):
         """Add a new hidden element to the form.
         """
 
-        self.Hidden = self.Hidden + '<input type="hidden" name="' \
-                   + Name  \
+        self.hidden = self.hidden + '<input type="hidden" name="' \
+                   + name  \
                    + '" value="'  \
-                   + Value  \
+                   + value  \
                    + '">'
 
         return
@@ -266,20 +266,20 @@ class Form:
         # <input type="file">
         #
         HTML = '<form action="' \
-               + self.Action \
+               + self.action \
                + '" method="' \
-               + self.Method \
+               + self.method \
                + '" enctype="multipart/form-data">'
 
-        HTML = HTML + self.NoFieldset
+        HTML = HTML + self.no_fieldset
 
-        for Legend in self.Fieldsets.keys():
+        for legend in self.fieldsets.keys():
             HTML = HTML + '<fieldset><legend>' \
-                   + Legend \
+                   + legend \
                    + '</legend><table>' \
-                   + self.Fieldsets[Legend] \
+                   + self.fieldsets[legend] \
                    + '</table></fieldset>'
 
-        HTML = HTML + self.Hidden + '<button type="submit">' + self.SubmitLabel + '</button></form>'
+        HTML = HTML + self.hidden + '<button type="submit">' + self.submit_label + '</button></form>'
 
         return(HTML)
