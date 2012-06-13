@@ -35,6 +35,8 @@ VERSION = "0.1.0"
 ROWS = 20
 COLS = 60
 
+DOCTYPE = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'
+
 def build_table_row(DataList):
     """This method returns a HTML table row containing the table data from the list given.
     """
@@ -104,9 +106,13 @@ class Page:
 
         link_str = ''.join(['<link rel="{0}" href="{1}">'.format(link, uri) for link, uri in self.link_dict.items()])
 
-        document_str = '<html><head><title>{0}</title>{1}<style type="text/css">{2}</style></head><body>{3}</body></html>'
+        document_str = '{0}<html><head><title>{1}</title>{2}<style type="text/css">{3}</style></head><body>{4}</body></html>'
 
-        return(document_str.format(self.title, link_str, self.css, self.body))
+        return(document_str.format(DOCTYPE,
+                                   self.title,
+                                   link_str,
+                                   self.css,
+                                   self.body))
 
 class Form:
     """This is a helper class to quickly create HTML forms.
@@ -192,19 +198,13 @@ class Form:
 
         return
 
-    def add_textarea(self, name, content):
+    def add_textarea(self, name, content = ""):
         """Add a text area to the form or the current fieldset (if any).
         """
 
-        HTML = '<textarea name="' \
-               + name  \
-               + '" rows="' \
-               + str(ROWS) \
-               +'" cols="' \
-               + str(COLS) \
-               +'">' \
-               + content \
-               + '</textarea>'
+        HTML = '<textarea name="{0}" rows="{1}" cols="{2}">{3}</textarea>'
+
+        HTML = HTML.format(name, str(ROWS), str(COLS), content)
 
         if self.current_fieldset:
 
