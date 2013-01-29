@@ -26,7 +26,7 @@ import simplegui
 #
 from distutils.core import setup
 
-SCRIPTS = ["simplegui.py"]
+SCRIPTS = []
 
 EXECUTABLES = []
 
@@ -41,7 +41,72 @@ except ImportError:
 
     print("Warning: the cx_Freeze module could not be imported. You will not be able to build binary packages.")
 
-LONG_DESCRIPTION = ""
+LONG_DESCRIPTION = """About
+-----
+
+simplegui is a simplified GUI generator using Tkinter.
+
+Prerequisites
+-------------
+
+Python http://www.python.org
+
+Installation
+------------
+
+Unzip the file, then at the command line run
+
+::
+
+    python setup.py install
+
+Usage
+-----
+
+::
+
+    >>> import simplegui
+    >>> g = simplegui.GUI()
+    >>> def buttoncallback():
+    ...     g.status("Button klicked!")
+    >>> g.button("Klick me!", buttoncallback)
+    >>> g.button("Klick me too!", buttoncallback)
+    >>> def listboxcallback(text):
+    ...     g.status("listbox select: '{0}'".format(text))
+    >>> g.listbox(["one", "two", "three"], listboxcallback)
+    >>> g.listbox(["A", "B", "C"], listboxcallback)
+    >>> def scalecallback(text):
+    ...     g.status("scale value: '{0}'".format(text))
+    >>> g.scale("Scale me!", scalecallback)
+    >>> g.run()
+    >>>
+
+Documentation
+-------------
+
+To read the API documentation, open a shell / DOS window, navigate to
+the simplegui directory, and run
+
+::
+
+    pydoc simplegui
+
+You can create a HTML version using
+
+::
+
+    pydoc -w simplegui
+
+License
+-------
+
+simplegui is licensed under the GPL. See the file COPYING for details.
+
+Author
+------
+
+Florian Berger
+"""
 
 # Python 2.x doesn't honour the 'package_dir' and 'package_data' arguments to
 # setup() when building an 'sdist'. Generate MANIFEST.in containing the
@@ -49,8 +114,7 @@ LONG_DESCRIPTION = ""
 #
 print("regenerating MANIFEST.in for Python 2.x")
 MANIFEST = open("MANIFEST.in", "wt")
-MANIFEST.write("include COPYING
-")
+MANIFEST.write("include COPYING")
 MANIFEST.close()
 
 setup(name = "simplegui",
@@ -58,7 +122,7 @@ setup(name = "simplegui",
       author = "Florian Berger",
       author_email = "fberger@florian-berger.de",
       url = "http://florian-berger.de/en/software/simplegui",
-      description = "simplegui - DESCRIPTION HERE",
+      description = "simplegui - Simplified GUI generation using Tkinter",
       long_description = LONG_DESCRIPTION,
       license = "GPL",
       py_modules = ["simplegui"],
@@ -67,4 +131,3 @@ setup(name = "simplegui",
       provides = ["simplegui"],
       scripts = SCRIPTS,
       executables = EXECUTABLES)
-

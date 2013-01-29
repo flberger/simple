@@ -1,23 +1,6 @@
 """ Simplified GUI generation using Tkinter
 
     Copyright (c) 2013 by Florian Berger <fberger@florian-berger.de>
-
-    Usage:
-
-    >>> g = GUI()
-    >>> def buttoncallback():
-    ...     g.status("Button klicked!")
-    >>> g.button("Klick me!", buttoncallback)
-    >>> g.button("Klick me too!", buttoncallback)
-    >>> def listboxcallback(text):
-    ...     g.status("listbox select: '{0}'".format(text))
-    >>> g.listbox(["one", "two", "three"], listboxcallback)
-    >>> g.listbox(["A", "B", "C"], listboxcallback)
-    >>> def scalecallback(text):
-    ...     g.status("scale value: '{0}'".format(text))
-    >>> g.scale("Scale me!", scalecallback)
-    >>> g.run()
-    >>>
 """
 
 # This file is part of simplegui.
@@ -50,11 +33,13 @@ import Tkinter
 class GUI:
     """Base class for a window to add widgets to.
     """
+
     def __init__(self):
-        """Initialise.
+        """Initialise. Call this first before calling any other Tkinter routines.
         """
 
         self.root = Tkinter.Tk()
+        #self.root = Tkinter.Toplevel()
 
         self.root.title = "simplegui GUI"
 
