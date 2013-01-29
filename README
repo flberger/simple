@@ -1,0 +1,48 @@
+README for simplegui
+==================
+
+About
+-----
+
+simplegui is ADD HERE
+
+
+Prerequisites
+-------------
+
+Python    http://www.python.org
+
+
+Installation
+------------
+
+Unzip the file, then at the command line run
+
+    python setup.py install
+
+
+Documentation
+-------------
+
+To read the API documentation, open a shell / DOS window, navigate to the
+simplegui directory, and run
+
+    pydoc simplegui
+
+You can create a HTML version using
+
+    pydoc -w simplegui
+
+
+License
+-------
+
+simplegui is licensed under the GPL. See the file COPYING for details.
+
+
+Author
+------
+
+(c) Florian Berger <fberger@florian-berger.de>
+
+
