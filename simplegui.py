@@ -31,22 +31,29 @@
 
 VERSION = "0.1.0"
 
-import Tkinter
+try:
+    import tkinter
+
+except ImportError:
+
+    # Support Python 2.x
+    #
+    import Tkinter as tkinter
 
 class GUI:
     """Base class for a window to add widgets to.
     """
 
     def __init__(self):
-        """Initialise. Call this first before calling any other Tkinter routines.
+        """Initialise. Call this first before calling any other tkinter routines.
         """
 
-        self.root = Tkinter.Tk()
-        #self.root = Tkinter.Toplevel()
+        self.root = tkinter.Tk()
+        #self.root = tkinter.Toplevel()
 
         self.root.title = "simplegui GUI"
 
-        self.frame = Tkinter.Frame(master = self.root,
+        self.frame = tkinter.Frame(master = self.root,
                                    padx = 10,
                                    pady = 10,
                                    width = 300,
@@ -54,8 +61,8 @@ class GUI:
 
         self.frame.pack()
 
-        self.statusbar = Tkinter.Label(master = self.frame,
-                                       text = "simplegui (Tkinter {0})".format(Tkinter.TkVersion))
+        self.statusbar = tkinter.Label(master = self.frame,
+                                       text = "simplegui (tkinter {0})".format(tkinter.TkVersion))
 
         self.statusbar.pack()
 
@@ -70,7 +77,7 @@ class GUI:
         return
 
     def run(self):
-        """ Run the Tkinter mainloop.
+        """ Run the tkinter mainloop.
         """
 
         self.root.mainloop()
@@ -81,7 +88,7 @@ class GUI:
         """Add a button.
         """
 
-        Tkinter.Button(master = self.frame,
+        tkinter.Button(master = self.frame,
                        text = label,
                        command = callback).pack()
 
@@ -93,9 +100,9 @@ class GUI:
            where entry is a string.
         """
 
-        stringvar = Tkinter.StringVar(value = tuple(stringlist))
+        stringvar = tkinter.StringVar(value = tuple(stringlist))
 
-        listbox = Tkinter.Listbox(master = self.frame,
+        listbox = tkinter.Listbox(master = self.frame,
                                   height = len(stringlist),
                                   listvariable = stringvar)
 
@@ -117,7 +124,7 @@ class GUI:
         def callbackwrapper(value):
             callback(int(value) / 100.0)
 
-        Tkinter.Scale(master = self.frame,
+        tkinter.Scale(master = self.frame,
                                   label = scalelabel,
                                   orient = "horizontal",
                                   length = 100,
