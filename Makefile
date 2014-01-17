@@ -4,6 +4,7 @@ help:
 	@echo '    exe'
 	@echo '    user_install'
 	@echo '    pypi'
+	@echo '    doctest'
 	@echo '    README.rst'
 	@echo '    freecode'
 	@echo '    sign'
@@ -15,17 +16,20 @@ ifdef PYTHON
 
 sdist:
 	rm -vf MANIFEST
-	\$(PYTHON) setup.py sdist --force-manifest --formats=zip
+	$(PYTHON) setup.py sdist --force-manifest --formats=zip
 
 exe: sdist
 	rm -rf build/exe.*
-	\$(PYTHON) setup.py build
+	$(PYTHON) setup.py build
 
 user_install:
-	\$(PYTHON) setup.py install --user --record filelist.txt
+	$(PYTHON) setup.py install --user --record filelist.txt
 
 pypi:
-	\$(PYTHON) setup.py register
+	$(PYTHON) setup.py register
+
+doctest:
+	$(PYTHON) -m doctest README
 
 else
 
@@ -39,6 +43,9 @@ user_install:
 	@echo Please supply Python executable as PYTHON=executable.
 
 pypi:
+	@echo Please supply Python executable as PYTHON=executable.
+
+doctest:
 	@echo Please supply Python executable as PYTHON=executable.
 
 endif
