@@ -37,8 +37,11 @@ Usage
     >>> def scalecallback(text):
     ...     g.status("scale value: '{0}'".format(text))
     >>> g.scale("Scale me!", scalecallback)
+    >>> g.label("This is a label for text display.\nThat was a line break.\nThat was another.")
+    >>> g.center()
     >>> g.run()
     >>>
+
 
 Documentation
 -------------

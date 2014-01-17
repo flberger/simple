@@ -55,11 +55,9 @@ class GUI:
 
         self.frame = tkinter.Frame(master = self.root,
                                    padx = 10,
-                                   pady = 10,
-                                   width = 300,
-                                   height = 300)
+                                   pady = 10)
 
-        self.frame.pack()
+        self.frame.pack(fill = "both")
 
         self.statusbar = tkinter.Label(master = self.frame,
                                        text = "simplegui (tkinter {0})".format(tkinter.TkVersion))
@@ -131,5 +129,31 @@ class GUI:
                                   showvalue = "true",
                                   sliderlength = 10,
                                   command = callbackwrapper).pack()
+
+        return
+
+    def label(self, text):
+        """Add a label.
+        """
+
+        tkinter.Label(master = self.frame,
+                      text = text).pack()
+
+        return
+
+    def center(self):
+        """Center the root window on screen.
+        """
+
+        self.root.update()
+
+        screenwidth = self.root.winfo_screenwidth()
+        screenheight = self.root.winfo_screenheight()
+
+        windowwidth = self.root.winfo_width()
+        windowheight = self.root.winfo_height()
+        
+        self.root.geometry("+{0}+{1}".format(int(screenwidth / 2 - windowwidth / 2),
+                                             int(screenheight / 2 - windowheight / 2)))
 
         return
