@@ -26,6 +26,9 @@
 # Grun http://www.manatlan.com/page/grun
 # EasyGUI http://easygui.sourceforge.net/
 
+# TODO: scales should display the actual value sent
+# TODO: keep track of generated buttons per GUI, and make them all the same width
+
 VERSION = "0.1.0"
 
 import Tkinter
