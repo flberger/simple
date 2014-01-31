@@ -147,12 +147,30 @@ USING_TTK = False
 STYLE = None
 
 try:
-    import tkinter.ttk
+    import tkinter.ttk as ttk
+
+except ImportError:
+
+    try:
+
+        # Support Python 2.7
+        #
+        import ttk
+
+    except ImportError:
+
+        # TODO: Use logging module for warnings
+        #
+        sys.stderr.write("Warning: ttk unavailable" + "\n")
+
+        ttk = None
+
+if ttk is not None:
 
     # Diving into Python internals! "Everything is an object" boils
     # down to "Everything has a __dict__". :-)
     #
-    for key in tkinter.ttk.__dict__.keys():
+    for key in ttk.__dict__.keys():
 
         # Restrict to actual exported items.
         # Don't mess with ttk.Widget
@@ -161,17 +179,11 @@ try:
             and not key.startswith("_")
             and key != "Widget"):
 
-            sys.stderr.write("Setting tkinter.{0} -> tkinter.ttk.{0}".format(key) + "\n")
+            sys.stderr.write("Setting tkinter.{0} -> ttk.{0}".format(key) + "\n")
 
-            tkinter.__dict__[key] = tkinter.ttk.__dict__[key]
+            tkinter.__dict__[key] = ttk.__dict__[key]
 
     USING_TTK = True
-
-except ImportError:
-
-    # TODO: Use logging module for warnings
-    #
-    sys.stderr.write("Warning: ttk unavailable" + "\n")
 
 # Then, we use Tix in a separate namespace
 #
@@ -229,7 +241,7 @@ class GUI:
 
         if USING_TTK:
 
-            self.style = tkinter.ttk.Style()
+            self.style = ttk.Style()
 
         self.root.title(title)
 
@@ -330,7 +342,7 @@ class GUI:
 
             def callbackwrapper(value):
 
-                # tkinter.ttk.Scale calls back with a float string
+                # ttk.Scale calls back with a float string
                 #
                 value_label["text"] = int(float(value) * 100)
 
@@ -385,7 +397,7 @@ class GUI:
             # We use dimensions as with Scale.
             # TODO: centralise these values somewhere
             #
-            bar = tkinter.ttk.Progressbar(master = self.frame,
+            bar = ttk.Progressbar(master = self.frame,
                                           orient = "horizontal",
                                           length = 100,
                                           mode = "determinate",
