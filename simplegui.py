@@ -28,6 +28,7 @@
 
 # TODO: scales should display the actual value sent
 # TODO: keep track of generated buttons per GUI, and make them all the same width
+# TODO: Unify USING_TTK and 'tix is not None' checking style
 
 VERSION = "0.1.1"
 
@@ -221,8 +222,12 @@ class GUI:
     """Base class for a window to add widgets to.
     """
 
-    def __init__(self, title = "simplegui GUI"):
+    def __init__(self, title = "simplegui GUI", width = 300):
         """Initialise. Call this first before calling any other tkinter routines.
+
+           title is the window title to use.
+
+           width is the width of scale, bar etc. widgets.
         """
 
         if tix is not None:
@@ -237,13 +242,15 @@ class GUI:
 
         #self.root = tkinter.Toplevel()
 
+        self.root.title(title)
+
+        self.width = width
+
         self.style = None
 
         if USING_TTK:
 
             self.style = ttk.Style()
-
-        self.root.title(title)
 
         self.frame = tkinter.Frame(master = self.root)
 
@@ -350,10 +357,10 @@ class GUI:
 
             self.style.configure("Simplegui.Horizontal.TScale",
                                  orient = "horizontal",
-                                 length = 100,
                                  sliderlength = 10)
 
             tkinter.Scale(master = self.frame,
+                          length = self.width,
                           command = callbackwrapper,
                           style = "Simplegui.Horizontal.TScale").pack(padx = 10, pady = 5)
 
@@ -368,7 +375,7 @@ class GUI:
             tkinter.Scale(master = self.frame,
                           label = scalelabel,
                           orient = "horizontal",
-                          length = 100,
+                          length = self.width,
                           showvalue = "true",
                           sliderlength = 10,
                           command = callbackwrapper).pack(padx = 10, pady = 5)
@@ -394,12 +401,10 @@ class GUI:
 
             # This is not a standard widget, so we get it from
             # ttk directly.
-            # We use dimensions as with Scale.
-            # TODO: centralise these values somewhere
             #
             bar = ttk.Progressbar(master = self.frame,
                                           orient = "horizontal",
-                                          length = 100,
+                                          length = self.width,
                                           mode = "determinate",
                                           maximum = 100,
                                           value = 0)
@@ -416,11 +421,10 @@ class GUI:
 
         elif tix is not None:
 
-            # We use dimensions as with Scale.
-            # TODO: centralise these values somewhere
             # Setting text to whitespace to prevent displaying percentages.
             #
             bar = tix.Meter(master = self.frame,
+                            width = self.width,
                             text = " ",
                             value = 0.0)
 
@@ -432,6 +436,11 @@ class GUI:
 
                 return
 
+            # Set the value once. This will redraw the Meter at
+            # actual width.
+            #
+            bar["value"] = 0.0
+            
             return callback
 
         else:
