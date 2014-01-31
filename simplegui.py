@@ -44,14 +44,14 @@ class GUI:
     """Base class for a window to add widgets to.
     """
 
-    def __init__(self):
+    def __init__(self, title = "simplegui GUI"):
         """Initialise. Call this first before calling any other tkinter routines.
         """
 
         self.root = tkinter.Tk()
         #self.root = tkinter.Toplevel()
 
-        self.root.title = "simplegui GUI"
+        self.root.title(title)
 
         self.frame = tkinter.Frame(master = self.root,
                                    padx = 10,
