@@ -173,6 +173,38 @@ except ImportError:
     #
     sys.stderr.write("Warning: ttk unavailable" + "\n")
 
+# Then, we use Tix in a separate namespace
+#
+try:
+
+    import tkinter.tix as tix
+
+except ImportError:
+
+    # Support Python 2.x
+    #
+    import Tix as tix
+
+# Now that does not mean a lot. Check it.
+#
+t = tkinter.Tk()
+
+t.withdraw()
+
+try:
+    t.tk.eval('package require Tix')
+
+except:
+
+    # "TclError: can't find package Tix"
+    #
+    tix = None
+    
+t.destroy()
+
+t = None
+
+
 class GUI:
     """Base class for a window to add widgets to.
     """
@@ -181,7 +213,16 @@ class GUI:
         """Initialise. Call this first before calling any other tkinter routines.
         """
 
-        self.root = tkinter.Tk()
+        if tix is not None:
+
+            # To access Tix widgets, Tix' Tk must be the root
+            #
+            self.root = tix.Tk()
+
+        else:
+
+            self.root = tkinter.Tk()
+
         #self.root = tkinter.Toplevel()
 
         self.style = None
@@ -208,6 +249,24 @@ class GUI:
         """
 
         self.statusbar["text"] = text
+
+        return
+
+
+    def center(self):
+        """Center the root window on screen.
+        """
+
+        self.root.update()
+
+        screenwidth = self.root.winfo_screenwidth()
+        screenheight = self.root.winfo_screenheight()
+
+        windowwidth = self.root.winfo_width()
+        windowheight = self.root.winfo_height()
+        
+        self.root.geometry("+{0}+{1}".format(int(screenwidth / 2 - windowwidth / 2),
+                                             int(screenheight / 2 - windowheight / 2)))
 
         return
 
@@ -313,19 +372,59 @@ class GUI:
 
         return
 
-    def center(self):
-        """Center the root window on screen.
+    def bar(self):
+        """Add a bar for progress or meter display.
+
+           Returns a function to be called with a float 0..1.
         """
 
-        self.root.update()
+        if USING_TTK:
 
-        screenwidth = self.root.winfo_screenwidth()
-        screenheight = self.root.winfo_screenheight()
+            # This is not a standard widget, so we get it from
+            # ttk directly.
+            # We use dimensions as with Scale.
+            # TODO: centralise these values somewhere
+            #
+            bar = tkinter.ttk.Progressbar(master = self.frame,
+                                          orient = "horizontal",
+                                          length = 100,
+                                          mode = "determinate",
+                                          maximum = 100,
+                                          value = 0)
 
-        windowwidth = self.root.winfo_width()
-        windowheight = self.root.winfo_height()
-        
-        self.root.geometry("+{0}+{1}".format(int(screenwidth / 2 - windowwidth / 2),
-                                             int(screenheight / 2 - windowheight / 2)))
+            bar.pack(padx = 10, pady = 5)
+
+            def callback(value):
+
+                bar["value"] = int(value * 100)
+
+                return
+
+            return callback
+
+        elif tix is not None:
+
+            # We use dimensions as with Scale.
+            # TODO: centralise these values somewhere
+            # Setting text to whitespace to prevent displaying percentages.
+            #
+            bar = tix.Meter(master = self.frame,
+                            text = " ",
+                            value = 0.0)
+
+            bar.pack(padx = 10, pady = 5)
+
+            def callback(value):
+
+                bar["value"] = value
+
+                return
+
+            return callback
+
+        else:
+
+            # TODO: implement fallback
+            sys.stderr.write("No scrollbar\n")
 
         return
