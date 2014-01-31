@@ -29,7 +29,9 @@
 # TODO: scales should display the actual value sent
 # TODO: keep track of generated buttons per GUI, and make them all the same width
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
+
+import sys
 
 try:
     import tkinter
@@ -39,6 +41,137 @@ except ImportError:
     # Support Python 2.x
     #
     import Tkinter as tkinter
+
+# Different Python versions supply different Tk extension packages.
+#
+# In Python 2.x and above, there is Tix. It is an older 3rd party
+# addon.
+#
+# In Python 3.x and above, there is ttk. It is part of Tk and generally
+# looks more modern. Common advice is to
+#
+#     from Tkinter import *
+#     from ttk import *
+#
+# to make ttk overwrite certain Tk widgets.
+#
+# Tix and ttk supply similar extensions:
+#
+#     Tkinter       Tix (Python 2.x)    ttk (Python 3.x)
+#     -------       ----------------    ----------------
+#     Button                            Button
+#     Checkbutton                       Checkbutton
+#                                       Combobox
+#     Entry                             Entry
+#     Frame                             Frame
+#     Label                             Label
+#     LabelFrame                        LabelFrame
+#     Menubutton                        Menubutton
+#                                       Notebook
+#     PanedWindow                       PanedWindow
+#                                       Progressbar
+#     Radiobutton                       Radiobutton
+#     Scale                             Scale
+#     Scrollbar                         Scrollbar
+#                                       Separator
+#                                       Sizegrip
+#                                       Treeview
+#
+#                   Balloon
+#                   BitmapImage
+#                   Button
+#                   ButtonBox
+#                   Canvas
+#                   CheckList
+#                   Checkbutton
+#                   ComboBox
+#                   Control
+#                   DialogShell
+#                   DirList
+#                   DirSelectBox
+#                   DirSelectDialog
+#                   DirTree
+#                   ExFileSelectBox
+#                   ExFileSelectDialog
+#                   FileEntry
+#                   FileSelectBox
+#                   FileSelectDialog
+#                   Form
+#                   Frame
+#                   Grid
+#                   Image
+#                   InputOnly
+#                   Label
+#                   LabelEntry
+#                   LabelFrame
+#                   ListNoteBook
+#                   Listbox
+#                   Menu
+#                   Menubutton
+#                   Message
+#                   Meter
+#                   NoteBook
+#                   NoteBookFrame
+#                   OptionMenu
+#                   OptionName
+#                   Pack
+#                   PanedWindow
+#                   PhotoImage
+#                   Place
+#                   PopupMenu
+#                   Radiobutton
+#                   ResizeHandle
+#                   Scale
+#                   Scrollbar
+#                   ScrolledGrid
+#                   ScrolledHList
+#                   ScrolledListBox
+#                   ScrolledTList
+#                   ScrolledText
+#                   ScrolledWindow
+#                   Select
+#                   Shell
+#                   Spinbox
+#                   StdButtonBox
+#                   Text
+#                   Tree
+#                   Tributton
+#
+# See also:
+# [Tix, ttk and Tkinter ](http://poquitopicante.blogspot.de/2013/05/tix-ttk-and-tkinter.html)
+#
+# For starters, we use ttk over tkinter if available, to replace
+# standard widgets with their more shiny counterparts:
+#
+USING_TTK = False
+STYLE = None
+
+try:
+    import tkinter.ttk
+
+    # Diving into Python internals! "Everything is an object" boils
+    # down to "Everything has a __dict__". :-)
+    #
+    for key in tkinter.ttk.__dict__.keys():
+
+        # Restrict to actual exported items.
+        # Don't mess with ttk.Widget
+        #
+        if (key in tkinter.__dict__.keys()
+            and not key.startswith("_")
+            and key != "Widget"):
+
+            sys.stderr.write("Setting tkinter.{0} -> tkinter.ttk.{0}".format(key) + "\n")
+
+            tkinter.__dict__[key] = tkinter.ttk.__dict__[key]
+
+    USING_TTK = True
+
+except ImportError:
+
+    # TODO: Use logging module for warnings
+    #
+    sys.stderr.write("Warning: ttk unavailable" + "\n")
 
 class GUI:
     """Base class for a window to add widgets to.
@@ -51,18 +184,22 @@ class GUI:
         self.root = tkinter.Tk()
         #self.root = tkinter.Toplevel()
 
+        self.style = None
+
+        if USING_TTK:
+
+            self.style = tkinter.ttk.Style()
+
         self.root.title(title)
 
-        self.frame = tkinter.Frame(master = self.root,
-                                   padx = 10,
-                                   pady = 10)
+        self.frame = tkinter.Frame(master = self.root)
 
         self.frame.pack(fill = "both")
 
         self.statusbar = tkinter.Label(master = self.frame,
                                        text = "simplegui (tkinter {0})".format(tkinter.TkVersion))
 
-        self.statusbar.pack()
+        self.statusbar.pack(padx = 10, pady = 5)
 
         return
 
@@ -88,7 +225,7 @@ class GUI:
 
         tkinter.Button(master = self.frame,
                        text = label,
-                       command = callback).pack()
+                       command = callback).pack(padx = 10, pady = 5)
 
         return
 
@@ -104,7 +241,7 @@ class GUI:
                                   height = len(stringlist),
                                   listvariable = stringvar)
 
-        listbox.pack()
+        listbox.pack(padx = 10, pady = 5)
 
         def callbackwrapper(event):
             callback(event.widget.get(event.widget.curselection()[0]))
@@ -119,16 +256,51 @@ class GUI:
            float 0..1.
         """
 
-        def callbackwrapper(value):
-            callback(int(value) / 100.0)
+        if USING_TTK:
 
-        tkinter.Scale(master = self.frame,
-                                  label = scalelabel,
-                                  orient = "horizontal",
-                                  length = 100,
-                                  showvalue = "true",
-                                  sliderlength = 10,
-                                  command = callbackwrapper).pack()
+            # No label option for ttk Scale
+            #
+            self.label(scalelabel)
+
+            # No showvalue option for ttk Scale
+            #
+            value_label = tkinter.Label(master = self.frame,
+                                        text = "0")
+
+            value_label.pack(padx = 10, pady = 5)
+
+            def callbackwrapper(value):
+
+                # tkinter.ttk.Scale calls back with a float string
+                #
+                value_label["text"] = int(float(value) * 100)
+
+                callback(float(value))
+
+            self.style.configure("Simplegui.Horizontal.TScale",
+                                 orient = "horizontal",
+                                 length = 100,
+                                 sliderlength = 10)
+
+            tkinter.Scale(master = self.frame,
+                          command = callbackwrapper,
+                          style = "Simplegui.Horizontal.TScale").pack(padx = 10, pady = 5)
+
+        else:
+
+            def callbackwrapper(value):
+
+                # Original tkinter.Scale calls back with an int string
+                #
+                callback(int(value) / 100.0)
+
+            tkinter.Scale(master = self.frame,
+                          label = scalelabel,
+                          orient = "horizontal",
+                          length = 100,
+                          showvalue = "true",
+                          sliderlength = 10,
+                          command = callbackwrapper).pack(padx = 10, pady = 5)
 
         return
 
@@ -137,7 +309,7 @@ class GUI:
         """
 
         tkinter.Label(master = self.frame,
-                      text = text).pack()
+                      text = text).pack(padx = 10, pady = 5)
 
         return
 

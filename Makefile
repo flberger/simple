@@ -11,6 +11,7 @@ help:
 	@echo '    clean'
 	@echo '    commit.txt'
 	@echo '    commit'
+	@echo '    bitbucket'
 
 ifdef PYTHON
 
@@ -79,3 +80,6 @@ commit:
 	@echo RETURN to commit using commit.txt, CTRL-C to cancel:
 	@read DUMMY
 	hg commit --logfile commit.txt && rm -v commit.txt
+
+bitbucket:
+	hg push https://flberger@bitbucket.org/flberger/simplegui
