@@ -33,6 +33,7 @@
 VERSION = "0.1.1"
 
 import sys
+import threading
 
 try:
     import tkinter
@@ -222,6 +223,8 @@ class GUI:
     """Base class for a window to add widgets to.
     """
 
+    # TODO: GUI.destroy()
+
     def __init__(self, title = "simplegui GUI", width = 300):
         """Initialise. Call this first before calling any other tkinter routines.
 
@@ -298,19 +301,22 @@ class GUI:
         return
 
     def button(self, label, callback):
-        """Add a button.
+        """Add a button with label `label` calling `callback` with no arguments when clicked.
+
+           The callback will run in a background thread.
         """
 
         tkinter.Button(master = self.frame,
                        text = label,
-                       command = callback).pack(padx = 10, pady = 5)
+                       command = get_threaded(callback)).pack(padx = 10, pady = 5)
 
         return
 
     def listbox(self, stringlist, callback):
         """Add a listbox.
-           Klicking an entry in listbox will call callback(entry),
-           where entry is a string.
+
+           Klicking an entry in listbox will call `callback(entry)`,
+           where `entry` is a string.
         """
 
         stringvar = tkinter.StringVar(value = tuple(stringlist))
@@ -321,6 +327,8 @@ class GUI:
 
         listbox.pack(padx = 10, pady = 5)
 
+        # TODO: Make callback threaded
+        #
         def callbackwrapper(event):
             callback(event.widget.get(event.widget.curselection()[0]))
 
@@ -330,8 +338,9 @@ class GUI:
 
     def scale(self, scalelabel, callback):
         """Add a scale.
-           Moving the scale will call callback(value), where value is a
-           float 0..1.
+
+           Moving the scale will call `callback(value)`, where `value`
+           is a float 0..1.
         """
 
         if USING_TTK:
@@ -347,6 +356,8 @@ class GUI:
 
             value_label.pack(padx = 10, pady = 5)
 
+            # TODO: Make callback threaded
+            #
             def callbackwrapper(value):
 
                 # ttk.Scale calls back with a float string
@@ -449,3 +460,33 @@ class GUI:
             sys.stderr.write("No scrollbar\n")
 
         return
+
+def get_threaded(callback):
+    """Return a function that, when called, will run `callback` in a background thread.
+    """
+
+    # def call_and_raise_exit():
+
+    #     callback()
+
+    #     # This will terminate the thread
+    #     #
+    #     raise SystemExit
+
+    #     return
+
+    def threaded_callback():
+
+        # Create a new Thread upon each call, so each Thread's
+        # start() method is only called once.
+        #
+        callback_thread = threading.Thread(target = callback,
+                                           name = "Thread-" + callback.__name__)
+
+        # This will return immediately.
+        #
+        callback_thread.start()
+
+        return
+
+    return threaded_callback
