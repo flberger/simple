@@ -223,8 +223,6 @@ class GUI:
     """Base class for a window to add widgets to.
     """
 
-    # TODO: GUI.destroy()
-
     def __init__(self, title = "simplegui GUI", width = 300):
         """Initialise. Call this first before calling any other tkinter routines.
 
@@ -264,6 +262,8 @@ class GUI:
 
         self.statusbar.pack(padx = 10, pady = 5)
 
+        self.threads = []
+        
         return
 
     def status(self, text):
@@ -300,6 +300,69 @@ class GUI:
 
         return
 
+    def destroy(self):
+        """Destroy this window in a safe manner.
+        """
+
+        # First, prevent accidental interaction
+        #
+        self.root.withdraw()
+        
+        sys.stderr.write("Attempting to join threads" + "\n")
+
+        not_main_thread = False
+
+        for thread in self.threads:
+
+            if thread == threading.current_thread():
+
+                sys.stderr.write("Cannot join thread '" + thread.name + "': it is the  current thread" + "\n")
+
+                not_main_thread = True
+
+            else:
+                sys.stderr.write("Joining thread '" + thread.name + "'" + "\n")
+
+                thread.join()
+
+        sys.stderr.write("All possible threads joined" + "\n")
+
+        # [In Python using Tkinter, what is the difference between root.destroy() and root.quit()?](https://stackoverflow.com/questions/2307464/in-python-using-tkinter-what-is-the-difference-between-root-destroy-and-root)
+        #
+        self.root.quit()
+
+        if not_main_thread:
+
+            sys.stderr.write("Raising SystemExit to terminate current thread" + "\n")
+
+            raise SystemExit
+        
+        return
+        
+    def get_threaded(self, callback):
+        """Return a function that, when called, will run `callback` in a background thread.
+
+           The thread will be registrered in GUI.threads upon start.
+        """
+
+        def threaded_callback():
+
+            # Create a new Thread upon each call, so each Thread's
+            # start() method is only called once.
+            #
+            callback_thread = threading.Thread(target = callback,
+                                               name = "Thread-" + callback.__name__)
+
+            # This will return immediately.
+            #
+            callback_thread.start()
+
+            self.threads.append(callback_thread)
+
+            return
+
+        return threaded_callback
+
     def button(self, label, callback):
         """Add a button with label `label` calling `callback` with no arguments when clicked.
 
@@ -308,7 +371,7 @@ class GUI:
 
         tkinter.Button(master = self.frame,
                        text = label,
-                       command = get_threaded(callback)).pack(padx = 10, pady = 5)
+                       command = self.get_threaded(callback)).pack(padx = 10, pady = 5)
 
         return
 
@@ -460,33 +523,3 @@ class GUI:
             sys.stderr.write("No scrollbar\n")
 
         return
-
-def get_threaded(callback):
-    """Return a function that, when called, will run `callback` in a background thread.
-    """
-
-    # def call_and_raise_exit():
-
-    #     callback()
-
-    #     # This will terminate the thread
-    #     #
-    #     raise SystemExit
-
-    #     return
-
-    def threaded_callback():
-
-        # Create a new Thread upon each call, so each Thread's
-        # start() method is only called once.
-        #
-        callback_thread = threading.Thread(target = callback,
-                                           name = "Thread-" + callback.__name__)
-
-        # This will return immediately.
-        #
-        callback_thread.start()
-
-        return
-
-    return threaded_callback
