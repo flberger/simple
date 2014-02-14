@@ -47,6 +47,7 @@ Usage
     ...         bar_value[0] = 0.0
     ...     bar_callback(bar_value[0])
     >>> g.button("Increase Bar", increase_bar)
+    >>> g.button("Quit", lambda: g.destroy())
     >>> g.center()
     >>> g.run()
     >>>

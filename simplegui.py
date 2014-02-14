@@ -26,6 +26,7 @@
 # Grun http://www.manatlan.com/page/grun
 # EasyGUI http://easygui.sourceforge.net/
 
+# TODO: add a regular root.after(...) function that cleans terminated threads from GUI.threads
 # TODO: scales should display the actual value sent
 # TODO: keep track of generated buttons per GUI, and make them all the same width
 # TODO: Unify USING_TTK and 'tix is not None' checking style
@@ -221,6 +222,29 @@ t = None
 
 class GUI:
     """Base class for a window to add widgets to.
+
+       Attributes:
+
+       GUI.root
+           The root Tk object. Only use when you know what you are
+           doing.
+    
+       GUI.width
+           The width of scale, bar etc. widgets.
+    
+       GUI.style
+           The ttk style when ttk is being used. Else None.
+    
+       GUI.frame
+       GUI.statusbar
+           Standard GUI widgets.
+    
+       GUI.threads
+           A list of Thread objects created by GUI.
+    
+       GUI.exit
+           Boolean flag whether to exit the application. To be
+           set by callbacks and caught by GUI.check_exit().
     """
 
     def __init__(self, title = "simplegui GUI", width = 300):
@@ -231,6 +255,8 @@ class GUI:
            width is the width of scale, bar etc. widgets.
         """
 
+        # TODO: mv root _root?
+        
         if tix is not None:
 
             # To access Tix widgets, Tix' Tk must be the root
@@ -253,9 +279,13 @@ class GUI:
 
             self.style = ttk.Style()
 
+        # TODO: mv frame _frame?
+        
         self.frame = tkinter.Frame(master = self.root)
 
         self.frame.pack(fill = "both")
+
+        # TODO: mv statusbar _statusbar?
 
         self.statusbar = tkinter.Label(master = self.frame,
                                        text = "simplegui (tkinter {0})".format(tkinter.TkVersion))
@@ -263,6 +293,8 @@ class GUI:
         self.statusbar.pack(padx = 10, pady = 5)
 
         self.threads = []
+
+        self.exit = False
         
         return
 
@@ -292,9 +324,32 @@ class GUI:
 
         return
 
-    def run(self):
-        """ Run the tkinter mainloop.
+    def check_exit(self):
+        """Check whether to shut down the application. If not, waits and calls itself.
+
+           This method is started by GUI.run() and runs in the
+           main thread.
         """
+
+        if self.exit == True:
+
+            sys.stderr.write("check_exit() caught GUI.exit flag, calling destroy()" + "\n")
+
+            self.destroy()
+
+        else:
+
+            # Check every 10 ms
+            #
+            self.root.after(10, func = self.check_exit)
+
+        return
+
+    def run(self):
+        """Start the exit checking function, and run the tkinter mainloop.
+        """
+
+        self.root.after(10, func = self.check_exit)
 
         self.root.mainloop()
 
@@ -304,26 +359,29 @@ class GUI:
         """Destroy this window in a safe manner.
         """
 
+        if threading.current_thread() in self.threads:
+
+            # Destroying from outside the main thread leads
+            # to all sorts of problems. Set a flag instead
+            # that will be caught by the main thread.
+            #
+            sys.stderr.write("destroy() called from callback thread, setting GUI.exit" + "\n")
+
+            self.exit = True
+            
+            return
+
         # First, prevent accidental interaction
         #
         self.root.withdraw()
         
         sys.stderr.write("Attempting to join threads" + "\n")
 
-        not_main_thread = False
-
         for thread in self.threads:
 
-            if thread == threading.current_thread():
+            sys.stderr.write("Joining thread '" + thread.name + "'" + "\n")
 
-                sys.stderr.write("Cannot join thread '" + thread.name + "': it is the  current thread" + "\n")
-
-                not_main_thread = True
-
-            else:
-                sys.stderr.write("Joining thread '" + thread.name + "'" + "\n")
-
-                thread.join()
+            thread.join()
 
         sys.stderr.write("All possible threads joined" + "\n")
 
@@ -331,12 +389,6 @@ class GUI:
         #
         self.root.quit()
 
-        if not_main_thread:
-
-            sys.stderr.write("Raising SystemExit to terminate current thread" + "\n")
-
-            raise SystemExit
-        
         return
         
     def get_threaded(self, callback):
@@ -353,11 +405,11 @@ class GUI:
             callback_thread = threading.Thread(target = callback,
                                                name = "Thread-" + callback.__name__)
 
+            self.threads.append(callback_thread)
+
             # This will return immediately.
             #
             callback_thread.start()
-
-            self.threads.append(callback_thread)
 
             return
 
