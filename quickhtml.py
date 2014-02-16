@@ -283,3 +283,17 @@ class Form:
         HTML = HTML + self.hidden + '<button type="submit">' + self.submit_label + '</button></form>'
 
         return(HTML)
+
+def htmlquote(input_str):
+    """Quote special characters in a string for more or less safe usage in HTML attributes, especially in <input>.
+    """
+
+    # Taken from my BBk2 CMS.
+
+    new_str = input_str.replace('"', '&quot;')
+
+    new_str = new_str.replace('<', '&lt;')
+
+    new_str = new_str.replace('>', '&gt;')
+
+    return new_str
