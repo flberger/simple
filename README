@@ -47,7 +47,7 @@ Usage
     ...         bar_value[0] = 0.0
     ...     bar_callback(bar_value[0])
     >>> g.button("Increase Bar", increase_bar)
-    >>> entry = g.labelentry("Type something:")
+    >>> entry = g.labelentry("Type something:", content = "There's already something here.")
     >>> def get_entry():
     ...     g.status(entry.get())
     >>> g.button("Set status to entry text", get_entry)

@@ -592,10 +592,12 @@ class GUI:
 
         return canvas
 
-    def labelentry(self, text, width = 16):
+    def labelentry(self, text, width = 16, content = ""):
         """Create a labelled entry, and return the entry.
 
            width is the number of characters to show.
+
+           content is a string to show in the entry.
 
            Call entry.get() to get its current content.
         """
@@ -610,6 +612,8 @@ class GUI:
 
             entry = labelentry.entry
 
+            entry.insert(0, content)
+
             entry.config(width = width)
 
             labelentry.pack()
@@ -622,6 +626,8 @@ class GUI:
             
             entry = tkinter.Entry(master = labelentry,
                                   width = width)
+
+            entry.insert(0, content)
 
             entry.pack()
 
