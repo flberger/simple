@@ -209,12 +209,16 @@ t.withdraw()
 try:
     t.tk.eval('package require Tix')
 
+    sys.stderr.write("Tix is available.\n")
+
 except:
 
     # "TclError: can't find package Tix"
     #
     tix = None
     
+    sys.stderr.write("Tix is NOT available.\n")
+
 t.destroy()
 
 t = None
@@ -575,3 +579,52 @@ class GUI:
             sys.stderr.write("No scrollbar\n")
 
         return
+
+    def canvas(self, width, height):
+        """Add a canvas and return it.
+        """
+
+        canvas = tkinter.Canvas(master = self.frame,
+                                width = width,
+                                height = height)
+
+        canvas.pack(padx = 10, pady = 5)
+
+        return canvas
+
+    def labelentry(self, text, width = 16):
+        """Create a labelled entry, and return the entry.
+
+           width is the number of characters to show.
+
+           Call entry.get() to get its current content.
+        """
+
+        entry = None
+        
+        if tix is not None:
+
+            labelentry = tix.LabelEntry(master = self.frame,
+                                        label = text,
+                                        labelside = "left")
+
+            entry = labelentry.entry
+
+            entry.config(width = width)
+
+            labelentry.pack()
+
+        else:
+            labelentry = tkinter.Frame(master = self.frame)
+
+            tkinter.Label(master = labelentry,
+                          text = text).pack(side = tkinter.LEFT)
+            
+            entry = tkinter.Entry(master = labelentry,
+                                  width = width)
+
+            entry.pack()
+
+            labelentry.pack()
+
+        return entry
