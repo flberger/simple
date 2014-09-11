@@ -1,6 +1,10 @@
 help:
 	@echo targets:
+	@echo '    check'
+	@echo '    errors'
 	@echo '    sdist'
+	@echo '    docs'
+	@echo '    exe'
 	@echo '    user_install'
 	@echo '    pypi'
 	@echo '    README.rst'
@@ -10,14 +14,30 @@ help:
 	@echo '    commit.txt'
 	@echo '    commit'
 
+check:
+	pylint quickhtml
+
+errors:
+	pylint --errors-only quickhtml
+
 ifdef PYTHON
 
 sdist:
 	rm -vf MANIFEST
 	$(PYTHON) setup.py sdist --force-manifest --formats=zip
 
+docs: clean
+	pydoctor --verbose \\
+	         --add-package $NAME$ \\
+	         --make-html \\
+	         --html-output doc/
+
+exe: sdist
+	rm -rf build/exe.*
+	$(PYTHON) setup.py build
+
 user_install:
-	$(PYTHON) setup.py install --user --record filelist.txt
+	$(PYTHON) setup.py install --user --record user_install-filelist.txt
 
 pypi:
 	$(PYTHON) setup.py register
@@ -25,6 +45,9 @@ pypi:
 else
 
 sdist:
+	@echo Please supply Python executable as PYTHON=executable.
+
+exe:
 	@echo Please supply Python executable as PYTHON=executable.
 
 user_install:
@@ -49,21 +72,18 @@ sign:
 	gpg --verify --multifile dist/*.asc
 
 clean:
-	rm -vf `find . -iname '*.log'`
+	@echo About to remove all log files. RETURN to proceed && read DUMMY && rm -vf `find . -iname '*.log'`
 	rm -rvf `find . -type d -iname '__pycache__'`
 	rm -vf `find . -iname '*.pyc'`
 
 commit.txt:
-	# single line because bzr diff returns false when there are diffs
-	#
-	bzr diff > commit.txt ; nano commit.txt
+	hg diff > commit.txt
 
-commit:
+commit: commit.txt
 	@echo commit.txt:
 	@echo ------------------------------------------------------
 	@cat commit.txt
 	@echo ------------------------------------------------------
 	@echo RETURN to commit using commit.txt, CTRL-C to cancel:
 	@read DUMMY
-	bzr commit --file commit.txt && rm -v commit.txt
-
+	hg commit --logfile commit.txt && rm -v commit.txt

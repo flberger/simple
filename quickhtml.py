@@ -23,10 +23,13 @@
 # along with quickhtml.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import into Bazaar Sat Feb 25 16:10:15 CET 2012.
+# Import into Mercurial Thu Sep 11 2014
 
 # TODO
 #
 # - use string.Template for all string building
+
+import collections
 
 VERSION = "0.1.0"
 
@@ -132,7 +135,7 @@ class Form:
         self.method = method
         self.separator = separator
         self.submit_label = submit_label
-        self.fieldsets = {}
+        self.fieldsets = collections.OrderedDict()
         self.current_fieldset = ''
         self.hidden = ''
         self.no_fieldset = ''
