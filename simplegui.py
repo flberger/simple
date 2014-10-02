@@ -175,7 +175,7 @@ if ttk is not None:
     #
     for key in ttk.__dict__.keys():
 
-        # Restrict to actual exported items.
+        # Restrict to actually exported items.
         # Don't mess with ttk.Widget
         #
         if (key in tkinter.__dict__.keys()
@@ -216,7 +216,7 @@ except:
     # "TclError: can't find package Tix"
     #
     tix = None
-    
+
     sys.stderr.write("Tix is NOT available.\n")
 
 t.destroy()
@@ -232,20 +232,20 @@ class GUI:
        GUI.root
            The root Tk object. Only use when you know what you are
            doing.
-    
+
        GUI.width
            The width of scale, bar etc. widgets.
-    
+
        GUI.style
            The ttk style when ttk is being used. Else None.
-    
+
        GUI.frame
        GUI.statusbar
            Standard GUI widgets.
-    
+
        GUI.threads
            A list of Thread objects created by GUI.
-    
+
        GUI.exit
            Boolean flag whether to exit the application. To be
            set by callbacks and caught by GUI.check_exit().
@@ -260,7 +260,7 @@ class GUI:
         """
 
         # TODO: mv root _root?
-        
+
         if tix is not None:
 
             # To access Tix widgets, Tix' Tk must be the root
@@ -284,7 +284,7 @@ class GUI:
             self.style = ttk.Style()
 
         # TODO: mv frame _frame?
-        
+
         self.frame = tkinter.Frame(master = self.root)
 
         self.frame.pack(fill = "both")
@@ -299,7 +299,7 @@ class GUI:
         self.threads = []
 
         self.exit = False
-        
+
         return
 
     def status(self, text):
@@ -322,7 +322,7 @@ class GUI:
 
         windowwidth = self.root.winfo_width()
         windowheight = self.root.winfo_height()
-        
+
         self.root.geometry("+{0}+{1}".format(int(screenwidth / 2 - windowwidth / 2),
                                              int(screenheight / 2 - windowheight / 2)))
 
@@ -372,13 +372,13 @@ class GUI:
             sys.stderr.write("destroy() called from callback thread, setting GUI.exit" + "\n")
 
             self.exit = True
-            
+
             return
 
         # First, prevent accidental interaction
         #
         self.root.withdraw()
-        
+
         sys.stderr.write("Attempting to join threads" + "\n")
 
         for thread in self.threads:
@@ -394,7 +394,7 @@ class GUI:
         self.root.quit()
 
         return
-        
+
     def get_threaded(self, callback):
         """Return a function that, when called, will run `callback` in a background thread.
 
@@ -419,7 +419,7 @@ class GUI:
 
         return threaded_callback
 
-    def button(self, label, callback):
+    def add_button(self, label, callback):
         """Add a button with label `label` calling `callback` with no arguments when clicked.
 
            The callback will run in a background thread.
@@ -431,7 +431,7 @@ class GUI:
 
         return
 
-    def listbox(self, stringlist, callback):
+    def add_listbox(self, stringlist, callback):
         """Add a listbox.
 
            Klicking an entry in listbox will call `callback(entry)`,
@@ -455,7 +455,7 @@ class GUI:
 
         return
 
-    def scale(self, scalelabel, callback):
+    def add_scale(self, scalelabel, callback):
         """Add a scale.
 
            Moving the scale will call `callback(value)`, where `value`
@@ -512,7 +512,7 @@ class GUI:
 
         return
 
-    def label(self, text):
+    def add_label(self, text):
         """Add a label.
         """
 
@@ -521,7 +521,7 @@ class GUI:
 
         return
 
-    def bar(self):
+    def add_bar(self):
         """Add a bar for progress or meter display.
 
            Returns a function to be called with a float 0..1.
@@ -570,7 +570,7 @@ class GUI:
             # actual width.
             #
             bar["value"] = 0.0
-            
+
             return callback
 
         else:
@@ -580,7 +580,7 @@ class GUI:
 
         return
 
-    def canvas(self, width, height):
+    def add_canvas(self, width, height):
         """Add a canvas and return it.
         """
 
@@ -592,7 +592,7 @@ class GUI:
 
         return canvas
 
-    def labelentry(self, text, width = 16, content = ""):
+    def add_labelentry(self, text, width = 16, content = ""):
         """Create a labelled entry, and return the entry.
 
            width is the number of characters to show.
@@ -603,7 +603,7 @@ class GUI:
         """
 
         entry = None
-        
+
         if tix is not None:
 
             labelentry = tix.LabelEntry(master = self.frame,
@@ -623,7 +623,7 @@ class GUI:
 
             tkinter.Label(master = labelentry,
                           text = text).pack(side = tkinter.LEFT)
-            
+
             entry = tkinter.Entry(master = labelentry,
                                   width = width)
 
