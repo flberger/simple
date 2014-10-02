@@ -302,7 +302,7 @@ class GUI:
 
         return
 
-    def status(self, text):
+    def set_status(self, text):
         """Display the new status text in the status bar.
         """
 
@@ -438,6 +438,8 @@ class GUI:
            where `entry` is a string.
         """
 
+        # TODO: What if the first item is the one to be selected, and no click happens? Wouldn't it be better to return something to query the selected item from, as done in labelentry?
+
         stringvar = tkinter.StringVar(value = tuple(stringlist))
 
         listbox = tkinter.Listbox(master = self.frame,
@@ -466,7 +468,7 @@ class GUI:
 
             # No label option for ttk Scale
             #
-            self.label(scalelabel)
+            self.add_label(scalelabel)
 
             # No showvalue option for ttk Scale
             #
@@ -634,3 +636,38 @@ class GUI:
             labelentry.pack()
 
         return entry
+
+    def add_rating_scale(self, scalelabel, count, worst_label, best_label):
+        """Add a rating scale, with `count` options to choose from.
+
+           Returns an object whose get() method will yield the integer
+           index of the selected item, starting with 0.
+        """
+
+        tkinter.Label(master = self.frame,
+                      text = scalelabel).pack(padx = 10, pady = 5)
+
+        rating_scale_frame = tkinter.Frame(master = self.frame)
+
+        tkinter.Label(master = rating_scale_frame,
+                      text = worst_label).pack(side = tkinter.LEFT, padx = 5)
+
+        scale_value = tkinter.IntVar()
+        
+        for i in range(count):
+            
+            r = tkinter.Radiobutton(master = rating_scale_frame,
+                                    text = "",
+                                    variable = scale_value,
+                                    value = i)
+
+            r.pack(side = tkinter.LEFT, padx = 5)
+        
+        tkinter.Label(master = rating_scale_frame,
+                      text = best_label).pack(side = tkinter.LEFT, padx = 5)
+
+        rating_scale_frame.pack()
+
+        # IntVar() has a get() method, which is what we want to supply
+        #
+        return scale_value
