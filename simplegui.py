@@ -391,7 +391,7 @@ class GUI:
 
         # [In Python using Tkinter, what is the difference between root.destroy() and root.quit()?](https://stackoverflow.com/questions/2307464/in-python-using-tkinter-what-is-the-difference-between-root-destroy-and-root)
         #
-        self.root.quit()
+        self.root.destroy()
 
         return
 
