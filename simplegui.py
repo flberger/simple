@@ -653,6 +653,8 @@ class GUI:
                       text = worst_label).pack(side = tkinter.LEFT, padx = 5)
 
         scale_value = tkinter.IntVar()
+
+        radiobuttons = []
         
         for i in range(count):
             
@@ -662,6 +664,13 @@ class GUI:
                                     value = i)
 
             r.pack(side = tkinter.LEFT, padx = 5)
+
+            radiobuttons.append(r)
+
+        # Set center button active
+        # Note: .select() is not present in ttk.Radiobuttin
+        #
+        radiobuttons[int(len(radiobuttons) / 2)].invoke()
         
         tkinter.Label(master = rating_scale_frame,
                       text = best_label).pack(side = tkinter.LEFT, padx = 5)
