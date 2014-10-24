@@ -57,8 +57,10 @@ Usage
     ...         g.set_status(rating_scale.get())
     ...     g.add_button("Set status to rating", get_rating)
     ...     g.add_button("Quit", lambda: g.destroy())
+    ...     def run_when_started():
+    ...         g.set_status("run_when_started() executed")
     ...     g.center()
-    ...     g.run()
+    ...     g.run(run_when_started)
     ...
     >>> test()
     >>> # Check issues with re-instatiating

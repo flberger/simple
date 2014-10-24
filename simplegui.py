@@ -349,11 +349,18 @@ class GUI:
 
         return
 
-    def run(self):
+    def run(self, function = None):
         """Start the exit checking function, and run the tkinter mainloop.
+
+           function, if given, must be a callable which will be run
+           in a thread once the application runs.
         """
 
         self.root.after(10, func = self.check_exit)
+
+        if function is not None:
+
+            self.root.after(10, func = self.get_threaded(function))
 
         self.root.mainloop()
 
