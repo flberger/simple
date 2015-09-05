@@ -99,6 +99,8 @@ class Page:
         """Append HTML to the body of the document.
         """
 
+        # TODO: Implement list-style 'page +=' convenience. 
+
         self.body = self.body + HTML
 
         return
@@ -128,8 +130,8 @@ class Form:
            submit_label is the value for the submit element.
         """
 
-        # TODO: Do we need to specify action
-        # at all, or does POST suffice?
+        # TODO: Do we need to specify action at all, or does POST suffice?
+        # TODO: Supply defaults fpr "method", "separator", "submit_label".
         #
         self.action = action
         self.method = method
@@ -283,7 +285,7 @@ class Form:
                    + self.fieldsets[legend] \
                    + '</table></fieldset>'
 
-        HTML = HTML + self.hidden + '<button type="submit">' + self.submit_label + '</button></form>'
+        HTML = HTML + self.hidden + '<button type="submit" style="padding:0.5em;">' + self.submit_label + '</button></form>'
 
         return(HTML)
 
