@@ -26,6 +26,10 @@
 # Grun http://www.manatlan.com/page/grun
 # EasyGUI http://easygui.sourceforge.net/
 
+# To check:
+# Gooey https://github.com/chriskiehl/Gooey
+# Wooey https://github.com/mfitzp/Wooey
+
 # TODO: add a regular root.after(...) function that cleans terminated threads from GUI.threads
 # TODO: scales should display the actual value sent
 # TODO: keep track of generated buttons per GUI, and make them all the same width
