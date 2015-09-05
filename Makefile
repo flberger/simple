@@ -65,9 +65,9 @@ sign:
 	gpg --verify --multifile dist/*.asc
 
 clean:
-	rm -vf \`find . -iname '*.log'\`
-	rm -rvf \`find . -type d -iname '__pycache__'\`
-	rm -vf \`find . -iname '*.pyc'\`
+	rm -vf `find . -iname '*.log'`
+	rm -rvf `find . -type d -iname '__pycache__'`
+	rm -vf `find . -iname '*.pyc'`
 
 commit.txt:
 	hg diff > commit.txt
