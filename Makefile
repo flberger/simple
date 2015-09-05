@@ -1,6 +1,9 @@
 help:
 	@echo targets:
+	@echo '    check'
+	@echo '    errors'
 	@echo '    sdist'
+	@echo '    docs'
 	@echo '    exe'
 	@echo '    user_install'
 	@echo '    pypi'
@@ -13,18 +16,30 @@ help:
 	@echo '    commit'
 	@echo '    bitbucket'
 
+check:
+	pylint quickhtml
+
+errors:
+	pylint --errors-only quickhtml
+
 ifdef PYTHON
 
 sdist:
 	rm -vf MANIFEST
 	$(PYTHON) setup.py sdist --force-manifest --formats=zip
 
+docs: clean
+	pydoctor --verbose \\
+	         --add-package $NAME$ \\
+	         --make-html \\
+	         --html-output doc/
+
 exe: sdist
 	rm -rf build/exe.*
 	$(PYTHON) setup.py build
 
 user_install:
-	$(PYTHON) setup.py install --user --record filelist.txt
+	$(PYTHON) setup.py install --user --record user_install-filelist.txt
 
 pypi:
 	$(PYTHON) setup.py register
@@ -61,18 +76,18 @@ freecode:
 
 sign:
 	rm -vf dist/*.asc
-	for i in dist/*.zip ; do gpg --sign --armor --detach \$\$i ; done
+	for i in dist/*.zip ; do gpg --sign --armor --detach $$i ; done
 	gpg --verify --multifile dist/*.asc
 
 clean:
-	rm -vf `find . -iname '*.log'`
+	@echo About to remove all log files. RETURN to proceed && read DUMMY && rm -vf `find . -iname '*.log'`
 	rm -rvf `find . -type d -iname '__pycache__'`
 	rm -vf `find . -iname '*.pyc'`
 
 commit.txt:
 	hg diff > commit.txt
 
-commit:
+commit: commit.txt
 	@echo commit.txt:
 	@echo ------------------------------------------------------
 	@cat commit.txt
