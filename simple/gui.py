@@ -1,22 +1,22 @@
 """ Simplified GUI generation using Tkinter
 
-    Copyright (c) 2013 by Florian Berger <fberger@florian-berger.de>
+    Copyright (c) 2013--2015 by Florian Berger <mail@florian-berger.de>
 """
 
-# This file is part of simplegui.
+# This file is part of simple.
 #
-# simplegui is free software: you can redistribute it and/or modify
+# simple is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# simplegui is distributed in the hope that it will be useful,
+# simple is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with simplegui.  If not, see <http://www.gnu.org/licenses/>.
+# along with simple.  If not, see <http://www.gnu.org/licenses/>.
 
 # work started on 22. Jan 2013
 
@@ -255,7 +255,7 @@ class GUI:
            set by callbacks and caught by GUI.check_exit().
     """
 
-    def __init__(self, title = "simplegui GUI", width = 300):
+    def __init__(self, title = "simple.gui GUI", width = 300):
         """Initialise. Call this first before calling any other tkinter routines.
 
            title is the window title to use.
@@ -296,7 +296,7 @@ class GUI:
         # TODO: mv statusbar _statusbar?
 
         self.statusbar = tkinter.Label(master = self.frame,
-                                       text = "simplegui (tkinter {0})".format(tkinter.TkVersion))
+                                       text = "simple.gui (tkinter {0})".format(tkinter.TkVersion))
 
         self.statusbar.pack(padx = 10, pady = 5)
 
@@ -498,14 +498,14 @@ class GUI:
 
                 callback(float(value))
 
-            self.style.configure("Simplegui.Horizontal.TScale",
+            self.style.configure("Simple.Horizontal.TScale",
                                  orient = "horizontal",
                                  sliderlength = 10)
 
             tkinter.Scale(master = self.frame,
                           length = self.width,
                           command = callbackwrapper,
-                          style = "Simplegui.Horizontal.TScale").pack(padx = 10, pady = 5)
+                          style = "Simple.Horizontal.TScale").pack(padx = 10, pady = 5)
 
         else:
 

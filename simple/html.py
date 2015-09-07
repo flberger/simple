@@ -1,29 +1,30 @@
-"""quickhtml - Python classes to quickly create HTML documents
+"""simple.html - Python classes to quickly create HTML documents
 
    Originating from the Building Block 2 CMS
 
    Outsourced on 14 Feb 2009
 
-   Copyright 2009, 2012 Florian Berger <fberger@florian-berger.de>
+   Copyright 2009--2015 Florian Berger <mail@florian-berger.de>
 """
 
-# This file is part of quickhtml.
+# This file is part of simple.
 #
-# quickhtml is free software: you can redistribute it and/or modify
+# simple is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# quickhtml is distributed in the hope that it will be useful,
+# simple is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with quickhtml.  If not, see <http://www.gnu.org/licenses/>.
+# along with simple.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import into Bazaar Sat Feb 25 16:10:15 CET 2012.
 # Import into Mercurial Thu Sep 11 2014
+# Renamed from quickhtml to simple.html Mon Sep 7 11:36:13 CEST 2015
 
 # TODO
 #
