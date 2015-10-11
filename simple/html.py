@@ -30,9 +30,8 @@
 #
 # - use string.Template for all string building
 
+import simple
 import collections
-
-VERSION = "0.1.0"
 
 # Dimensions of a Textarea
 #

@@ -35,8 +35,7 @@
 # TODO: keep track of generated buttons per GUI, and make them all the same width
 # TODO: Unify USING_TTK and 'tix is not None' checking style
 
-VERSION = "0.1.1"
-
+import simple
 import sys
 import threading
 
@@ -226,7 +225,6 @@ except:
 t.destroy()
 
 t = None
-
 
 class GUI:
     """Base class for a window to add widgets to.

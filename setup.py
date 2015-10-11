@@ -1,26 +1,26 @@
-"""simplegui Setup Script
+"""simple Setup Script
 
-   Copyright (c) 2013 Florian Berger <fberger@florian-berger.de>
+   Copyright (c) 2013--2015 Florian Berger <mail@florian-berger.de>
 """
 
-# This file is part of simplegui.
+# This file is part of simple.
 #
-# simplegui is free software: you can redistribute it and/or modify
+# simple is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# simplegui is distributed in the hope that it will be useful,
+# simple is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with simplegui.  If not, see <http://www.gnu.org/licenses/>.
+# along with simple.  If not, see <http://www.gnu.org/licenses/>.
 
 # Work started on 29. Jan 2013.
 
-import simplegui
+import simple
 
 # Fallback
 #
@@ -44,7 +44,7 @@ except ImportError:
 LONG_DESCRIPTION = """About
 -----
 
-simplegui is a simplified GUI generator using Tkinter.
+simple is a simplified GUI generator using Tkinter.
 
 Prerequisites
 -------------
@@ -65,8 +65,8 @@ Usage
 
 ::
 
-    >>> import simplegui
-    >>> g = simplegui.GUI()
+    >>> import simple.gui
+    >>> g = simple.gui.GUI()
     >>> def buttoncallback():
     ...     g.status("Button klicked!")
     >>> g.button("Klick me!", buttoncallback)
@@ -85,22 +85,22 @@ Documentation
 -------------
 
 To read the API documentation, open a shell / DOS window, navigate to
-the simplegui directory, and run
+the simple directory, and run
 
 ::
 
-    pydoc simplegui
+    pydoc simple
 
 You can create a HTML version using
 
 ::
 
-    pydoc -w simplegui
+    pydoc -w simple
 
 License
 -------
 
-simplegui is licensed under the GPL. See the file COPYING for details.
+simple is licensed under the GPL. See the file COPYING for details.
 
 Author
 ------
@@ -117,17 +117,17 @@ MANIFEST = open("MANIFEST.in", "wt")
 MANIFEST.write("include COPYING")
 MANIFEST.close()
 
-setup(name = "simplegui",
-      version = simplegui.VERSION,
+setup(name = "simple",
+      version = simple.VERSION,
       author = "Florian Berger",
-      author_email = "fberger@florian-berger.de",
-      url = "http://florian-berger.de/en/software/simplegui",
-      description = "simplegui - Simplified GUI generation using Tkinter",
+      author_email = "mail@florian-berger.de",
+      url = "http://florian-berger.de/en/software/simple",
+      description = "simple.gui - Simplified GUI generation using Tkinter",
       long_description = LONG_DESCRIPTION,
       license = "GPL",
-      py_modules = ["simplegui"],
+      py_modules = ["simple.gui"],
       packages = [],
       requires = [],
-      provides = ["simplegui"],
+      provides = ["simple.gui"],
       scripts = SCRIPTS,
       executables = EXECUTABLES)
