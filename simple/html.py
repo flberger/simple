@@ -123,7 +123,7 @@ class Form:
     """This is a helper class to quickly create HTML forms.
     """
 
-    def __init__(self, action, method, separator, submit_label):
+    def __init__(self, action, method, separator = "<br>", submit_label = "Submit"):
         """Initialize the form.
            action must be an URI to call and method must be GET or POST.
            separator separates the fieldset elements.
@@ -131,7 +131,6 @@ class Form:
         """
 
         # TODO: Do we need to specify action at all, or does POST suffice?
-        # TODO: Supply defaults fpr "method", "separator", "submit_label".
         #
         self.action = action
         self.method = method
