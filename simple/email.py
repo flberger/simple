@@ -25,6 +25,7 @@
 import simple
 import smtplib
 import codecs
+import threading
 
 def send(sender,
          recipients,
@@ -33,6 +34,8 @@ def send(sender,
          host,
          user,
          password_rot13):
+    """Send an email via SMTP.
+    """
 
     SMTP = smtplib.SMTP(host)
 
@@ -50,6 +53,32 @@ def send(sender,
 
     return
 
+def send_threaded(sender,
+                  recipients,
+                  subject,
+                  body,
+                  host,
+                  user,
+                  password_rot13):
+    """Run send() in a background thread, immediately returning after the call.
+       Exceptions when sending will terminate the thread, but not the main program.
+    """
+    
+    send_thread = threading.Thread(target = send,
+                                   args = (sender,
+                                           recipients,
+                                           subject,
+                                           body,
+                                           host,
+                                           user,
+                                           password_rot13))
+
+    send_thread.start()
+
+    return
+
 def encode_rot13(s):
+    """Encode a string in rot13.
+    """
 
     return codecs.encode(s, "rot13")
