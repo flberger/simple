@@ -22,10 +22,17 @@
 # mailtool.py in turn was taken from my first quick-and-dirty MOWS
 # (My Own Web Shop) implementation (mows.cgi) from June 2008.
 
+# TODO: Log errors from send_threaded() somewhere, in good Python spirit.
+
 import simple
 import smtplib
 import codecs
 import threading
+import io
+import traceback
+import os
+import pathlib
+import datetime
 
 def send(sender,
          recipients,
@@ -37,20 +44,51 @@ def send(sender,
     """Send an email via SMTP.
     """
 
-    SMTP = smtplib.SMTP(host)
+    # smtplib logs to stderr, so we need to jump through some
+    # hoops to capture the log.
+    # Idea taken from http://stackoverflow.com/a/7303587/1132250
+    #
+    logging_sink = io.StringIO()
 
-    SMTP.set_debuglevel(1)
+    original_stderr = smtplib.stderr
 
-    SMTP.starttls()
+    smtplib.stderr = logging_sink
 
-    SMTP.login(user, codecs.decode(password_rot13, "rot13"))
+    try:
+        SMTP = smtplib.SMTP(host)
 
-    SMTP.sendmail(sender,
-                  recipients,
-                  "From: {}\r\nTo: {}\r\nSubject: {}\r\n\r\n{}".format(sender, recipients[0],subject, body))
+        SMTP.set_debuglevel(1)
 
-    SMTP.quit()
+        SMTP.starttls()
 
+        SMTP.login(user, codecs.decode(password_rot13, "rot13"))
+
+        SMTP.sendmail(sender,
+                      recipients,
+                      "From: {}\r\nTo: {}\r\nSubject: {}\r\n\r\n{}".format(sender, recipients[0],subject, body))
+
+        SMTP.quit()
+
+    except:
+
+        smtplib.stderr = original_stderr
+
+        # Log error to file
+        #
+        with pathlib.Path(os.environ["PWD"], "smtp_errors.log").open("at", encoding = "utf8") as f:
+
+            f.write("--- {} ---\n".format(datetime.datetime.now()))
+
+            f.write(logging_sink.getvalue())
+
+            traceback.print_exc(file = f)
+
+            f.write("\n")
+
+        raise
+
+    smtplib.stderr = original_stderr
+        
     return
 
 def send_threaded(sender,
