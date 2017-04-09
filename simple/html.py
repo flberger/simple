@@ -29,6 +29,8 @@
 # TODO
 #
 # - use string.Template for all string building
+# - If Page.append() was called Page.write(), it would probably fit as output target for a print() command, which would be more familiar
+# - Pages should recognize Forms. page.append(form) should work.
 
 import simple
 import collections

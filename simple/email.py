@@ -22,8 +22,6 @@
 # mailtool.py in turn was taken from my first quick-and-dirty MOWS
 # (My Own Web Shop) implementation (mows.cgi) from June 2008.
 
-# TODO: Log errors from send_threaded() somewhere, in good Python spirit.
-
 import simple
 import smtplib
 import codecs
@@ -63,9 +61,11 @@ def send(sender,
 
         SMTP.login(user, codecs.decode(password_rot13, "rot13"))
 
+        msg = "From: {}\r\nTo: {}\r\nSubject: {}\r\n\r\n{}".format(sender, recipients[0],subject, body)
+        
         SMTP.sendmail(sender,
                       recipients,
-                      "From: {}\r\nTo: {}\r\nSubject: {}\r\n\r\n{}".format(sender, recipients[0],subject, body))
+                      codecs.encode(msg, "utf8", "replace"))
 
         SMTP.quit()
 
