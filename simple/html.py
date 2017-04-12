@@ -40,7 +40,7 @@ import collections
 ROWS = 20
 COLS = 60
 
-DOCTYPE = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'
+DOCTYPE = '<!DOCTYPE html>'
 
 def build_table_row(DataList):
     """This method returns a HTML table row containing the table data from the list given.
@@ -113,7 +113,7 @@ class Page:
 
         link_str = ''.join(['<link rel="{0}" href="{1}">'.format(link, uri) for link, uri in self.link_dict.items()])
 
-        document_str = '{0}<html><head><title>{1}</title>{2}<style type="text/css">{3}</style></head><body>{4}</body></html>'
+        document_str = '{0}<html><head><meta charset="utf-8"/><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>{1}</title>{2}<style type="text/css">{3}</style></head><body>{4}</body></html>'
 
         return(document_str.format(DOCTYPE,
                                    self.title,
